@@ -1,0 +1,18 @@
+<h1><%= @scene.name %></h1>
+<h3><%= @scene.description %></h3>
+
+<p>
+  <%= @@div %>
+</p>
+
+<br>
+<br>
+
+<% if @scene.options.any? %>
+  <form class="" action="/scenes/<%= @scene.id %>/interpret" method="get">
+    <input type="text" name="text" id="text" autofocus>
+    <button type="submit">Submit</button>
+  </form>
+<% else %>
+  <h4><a href="/">Start Over</a></h4>
+<% end %>

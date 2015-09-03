@@ -1,0 +1,97 @@
+<h1>Scene: <%= @scene.name %></h1>
+
+<h3>Description</h3>
+<p>
+  <%= @scene.description %>
+</p>
+
+<script>
+$(document).ready(function(){
+  $("#toggle_edit").click(function(){
+    $("#update_container").toggle();
+  });
+});
+</script>
+
+<button id="toggle_edit"> Edit Scene </button>
+<div id="update_container" style="display:none;">
+<h4>Edit name:</h4>
+  <form class="" action="/<%= @user.id %>/scenes/<%= @scene.id %>/edit_name" method="post">
+    <input type="hidden" name="_method" value="patch">
+    <input type="text" name="name" id="name" required>
+    <button class="btn btn-default" type="submit" name="button">Edit</button>
+  </form>
+<h4>Edit description:</h4>
+  <form class="" action="/<%= @user.id %>/scenes/<%= @scene.id %>/edit_description" method="post">
+    <input type="hidden" name="_method" value="patch">
+    <input type="text" name="description" id="description" required>
+    <button class="btn btn-default" type="submit" name="button">Edit</button>
+  </form>
+<h4>Delete scene</h4>
+  <form class="" action="/<%= @user.id %>/scenes/<%= @scene.id %>/delete" method="post">
+    <input type="hidden" name="_method" value="delete">
+    <button class="btn btn-danger" type="submit" name="button">Delete</button>
+  </form>
+</div>
+<br>
+<br>
+<div>
+    <!-- loop to output observations -->
+    <% if @scene.observations.any? %>
+      <ul>
+        <% @scene.observations.each do |observation| %>
+          <li> <%= observation.keyword %> - <%= observation.name %> - <%= observation.description %> - Required: <%= observation.required %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p> No observations exist for this scene, yet </p>
+    <% end %>
+    <form action ="/scenes/<%= @scene.id %>/add_observation"method="post">
+      <label for="keyword">Keyword (one word)</label>
+      <input type="text" name="keyword">
+
+      <label for="name">Name</label>
+      <input type="text" name="name">
+
+      <label for="description">Description</label>
+      <input type="text" name="description">
+
+      <label for="required">Required</label>
+      <input type="radio" name="required" value="true"> True, its required
+      <input type="radio" name="required" value="false"> False, not required
+
+      <button type="submit">Add observation</button>
+
+    </form>
+    <!-- form to add observations -->
+</div>
+<br>
+<% if @scene.previous_scene != nil %>
+  <h3>Previous Scene:</h3>
+  <h4><a href="/<%= @user.id %>/scenes/<%= @scene.previous_scene %>/edit"><%= Scene.find(@scene.previous_scene).name%></a></h4>
+  <p>
+    <%= Scene.find(@scene.previous_scene).description %>
+  </p>
+<% end %>
+
+<% if @scene.options.any? %>
+<h3>Following Scenes:</h3>
+  <% @scene.options.each do |option| %>
+    <h4><%= Scene.find(option.id).keyword%>: <a href="/<%= @user.id %>/scenes/<%= option.id %>/edit"><%= Scene.find(option.id).name%></a></h4>
+    <p>
+      <%= Scene.find(option.id).description %>
+    </p>
+  <% end %>
+<% end %>
+
+<h4>Add a following scene to <%= @scene.name %></h4>
+  <form id="next_scene" action="/<%= @user.id %>/scenes/add" method="post">
+    <input type="hidden" name="quest_id" value="<%= @scene.quest_id %>">
+    <input type="hidden" name="previous_scene" value="<%= @scene.id %>">
+    <input type="text" name="keyword" id="keyword" placeholder="KEYWORD (one word)"><br>
+    <input type="text" name="name" id="name" placeholder="Scene Name"><br>
+    <input type="test" name="description" id="description" placeholder="Description/Prompt"><br>
+    <button type="submit" class="btn btn-default" name="button">Submit</button>
+  </form>
+
+<h2>Quest: <a href="/<%= @user.id %>/quests/<%= Quest.find(@scene.quest_id).id %>/edit"><%= Quest.find(@scene.quest_id).name %></a></h2>

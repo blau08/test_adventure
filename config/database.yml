@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  database: text_adventure_development
+
+
+test:
+  adapter: postgresql
+  database: text_adventure_test
