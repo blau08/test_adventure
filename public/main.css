@@ -52,8 +52,8 @@ body {
     border-radius: 6px 0 6px 6px;
 }
 #bg{
-  position: fixed;
-  top: -46%;
+  position: absolute;
+  top: 1000%;
   left: -50%;
   width: 200%;
   height: 200%;
